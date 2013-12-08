@@ -1,0 +1,321 @@
+
+<div data-bb-type="screen" data-bb-effect="slide-left">
+		
+	<div data-bb-type="title" data-bb-caption="My Timetable" id="bar" data-bb-back-caption="Back"  ></div>
+	
+    <div data-bb-type="action-bar">
+	
+    	<div data-bb-type="action" data-bb-style="tab" data-bb-img="actionBar/cog_dark_theme.png" onclick="showTab('list');">List</div>
+		
+		<div data-bb-type="action" data-bb-style="tab" data-bb-selected="true" data-bb-img="actionBar/cog_dark_theme.png" onclick="showTab('add');">Add Timetable</div>
+	</div>
+
+
+
+
+
+<div data-role="page" id="list">
+    <ul data-bb-type="image-list" id="Timetablelist"></ul>
+</div>
+
+
+
+<div data-role="page" id="add" hidden="" >
+     <div data-bb-type="lable-control-horizontal-row">
+     
+     Course Name :<input type="text" name="course" id="cs" />
+                	Classroom Number:<input type="text" name="classroom" id="cls" />
+                	
+                    <select id="Week">
+                    	<option value="1">Mon</option>
+                        <option value="2">Tue</option>
+                        <option value="3">Wed</option>
+                        <option value="4">Thur</option>
+                        <option value="5">Fri</option>
+                        <option value="6">Sat</option>
+                        <option value="0">Sun</option>
+                    </select>
+                    
+                    <select id="Time">
+                    	<option value="8">8:00</option>
+                        <option value="9">9:00</option>
+                        <option value="10">10:00</option>
+                        <option value="11">11:00</option>
+                        <option value="12">12:00</option>
+                        <option value="13">13:00</option>
+                        <option value="14">14:00</option>
+                    </select>
+                    
+                    <select id="Hours">
+                    	<option value="1">1h</option>
+                        <option value="2">2h</option>
+                        <option value="3">3h</option>
+                        <option value="4">4h</option>
+                    </select>
+                    
+                     <div id="dropdown" data-bb-type="toggle" data-bb-checked="true" data-bb-on="Yes" data-bb-off="No" onchange="doSomething(this)"></div>
+                     
+                     <fieldset>
+                     	<legend>REMINDER</legend>
+                             <select id="remind">
+                                <option value="5">5min</option>
+                                <option value="10">10min</option>
+                                <option value="15">15min</option>
+                                <option value="20">20min</option>
+                                <option value="30">30min</option>
+                            </select>
+                    
+                    <div id="drop" data-bb-type="toggle" data-bb-checked="true" data-bb-on="Yes" data-bb-off="No" onchange="doSomething(this)"></div>
+						</fieldset>
+                     
+                    <div data-bb-type="button" onclick="SaveTT();">Save</div>
+                    <div data-bb-type="button" onclick="Delete();">Delete</div>
+    
+</div>
+
+<script>
+var ContactId;
+var currentIdT;
+function showTab(id) {
+	if (id == 'add') {
+		document.getElementById("add").style.display = 'inline';
+		document.getElementById("list").style.display = 'none';
+		document.getElementById("bar").setCaption("Edit/Add");
+		
+		
+	} else if (id == 'list') {
+		document.getElementById('list').style.display = 'inline';
+		document.getElementById('add').style.display = 'none';
+		document.getElementById("bar").setCaption("View All");
+		
+	}  
+}
+ 
+
+ var idea="";
+ 
+ function StartApp(){
+ 	dbNamespace = {};
+ 	dbNamespace.db = window.openDatabase('TimetableDB', '1.0', 'Offline Fruit Information', 5*1024*1024);
+	createDB();
+ 	alert("start app");
+	
+	
+	
+ }
+ 
+ 
+ 
+ 
+function createDB() {
+    var db = dbNamespace.db;
+    db.transaction(function(tx) {
+		//tx.executeSql('DROP TABLE IF EXISTS Contacts');
+        tx.executeSql("CREATE TABLE IF NOT EXISTS Timetable (id INTEGER PRIMARY KEY ASC)", 
+        [], 
+        function(trans) {
+			
+			
+			
+           // handle  the success
+		    
+            alert("Database TT created!");
+			
+			
+        }, 
+        function(trans, error) {
+            // handle the error
+            alert("Database TT creation error: " + error);
+        }
+    )});
+}
+
+
+	
+
+function SaveTT() {
+ 
+        alert("save");
+        var Today = new Date();
+		var NewDate = new Date();
+		
+		var Days;
+		if (document.querySelector('#Week').selectedOptions[0].value>Today.getDay()){
+			
+			Days = eval(document.querySelector('#Week').selectedOptions[0].value)-Today.getDay();
+			
+		
+		}else{
+			
+			Days = (Today.getDay()+eval(document.querySelector('#Week').selectedOptions[0].value))-3;
+			
+		}
+		NewDate.setDate(Today.getDate() + Days);
+		var BeginDate = new Date(NewDate.getFullYear(), NewDate.getMonth(), NewDate.getDate(), 
+		eval(document.querySelector('#Time').selectedOptions[0].value), 0, 0,0);
+		
+		
+		var FinishDate = new Date(NewDate.getFullYear(), NewDate.getMonth(), NewDate.getDate(), 
+eval(document.querySelector('#Time').selectedOptions[0].value)+eval(document.querySelector('#Hours').selectedOptions[0].value), 0, 0,0);
+		
+		
+		
+		var event = blackberry.pim.calendar.createEvent({
+			'summary': document.getElementById("cs").value,
+			'location': document.getElementById("cls").value,
+			'start': BeginDate,
+			'end': FinishDate,
+			'description': document.getElementById("dropdown").getChecked()?'lab':'nolab'
+		});
+		
+		event.save(
+			function (e){
+				//alert('saved'+e.id);
+					
+				Savetable(e.id);
+				
+				
+				
+			}
+		);
+
+ 
+ 
+ 
+}
+
+function Savetable(id){
+	
+	 var db = dbNamespace.db;
+	
+		db.transaction(	
+			function(tx) {
+				tx.executeSql(
+					"INSERT INTO Timetable(id) VALUES (?)",
+					[id],
+					function(trans, result) {
+						// handle the success
+						
+						alert("Add This Sheet TO DB");
+						ChooseTimetable();
+						
+					}, 
+					function(trans, error) {
+						 // handle the error
+						 alert("Error Add This Sheet TO DB" + id + ": " + error);
+					})
+			});
+	
+}
+
+function ChooseTimetable(){
+	
+	var options = {};
+	
+	blackberry.pim.calendar.findEvents(
+		options,
+		function(events){
+		
+			ChosenTimetable(events);
+			},
+			function(err){
+				alert('Error:' + error.code);	
+			}
+	);
+
+}
+
+function ChosenTimetable(events){
+	
+	var db = dbNamespace.db;
+	
+    db.transaction(function(tx) {
+        tx.executeSql("SELECT * FROM Timetable",
+        [],
+        function(trans, result) {
+			var rowOutput ="";
+			var items = [], item;
+			var index=0;
+			
+            for(var i=0; i < result.rows.length; i++) {
+				var flases = false;
+				for(var j=0;j<events.length; j++){
+					if(parseInt(result.rows.item(i).id)==parseInt(events[j].id)){
+						flases = true;
+						index=j;
+						break;
+						}
+				}
+				
+				
+				
+				
+				if(flases == true){
+								
+					item = document.createElement('div');
+					item.setAttribute('data-bb-type','item');
+					item.setAttribute('data-id',result.rows.item(i).id);
+					//item.setAttribute('data-desc',result.rows.item(i).Desc);
+					//item.setAttribute('data-img',result.rows.item(i).img);
+					item.setAttribute('data-bb-title',events[index].summary);
+					item.innerHTML = events[index].start + "<br/>" + events[index].end;
+					item.setAttribute('style', 'font-size:24px; font-weight:bold; word-wrap: break-word;height:300px');
+					item.onclick = function() {
+					var li = document.getElementById("Timetablelist").selected;
+					currentIdT = li.getAttribute('data-id');
+					bb.pushScreen('detailTimetable.html', 'detailTimetable');
+					
+					
+						
+					};
+					items.push(item);
+				}else{
+				
+					Delete(parseInt( result.rows.item(i).id ));
+				}
+            }
+			document.getElementById('Timetablelist').refresh(items);
+        }, 
+        function(trans, error) {
+        })
+    });
+
+	
+	
+	
+	
+	
+	
+	
+	}
+
+
+function Delete(id){
+	var db = dbNamespace.db;
+
+	
+	 db.transaction(function(tx) {
+        tx.executeSql("DELETE FROM Timetable WHERE id = " + id,
+            [],
+            function(trans, result) {
+                // handle the success
+				alert("DElete" + ContactId);
+				
+				
+                
+            }, 
+            function(trans, error) {
+                 // handle the error
+                 alert(error);
+            }
+     )});
+	
+	
+	}
+
+  
+   
+ 
+
+StartApp();
+</script>

@@ -1,0 +1,115 @@
+
+
+
+
+<div data-bb-type="screen" data-bb-effect="fade">
+
+
+
+	
+	<select id="poi">
+		<option value="atm" selected="true">ATM</option>
+   		<option value="bank">Bank</option>
+    	<option value="bar">Bar</option>
+    	<option value="bus_station">Bus Station</option>
+    	<option value="convenience_store">Convenience Store</option>
+    	<option value="grocery_or_supermarket">Grocery Store</option>
+    	<option value="liquor_store">Liquor Store</option>
+    	<option value="pharmacy">Pharmacy</option>
+    	<option value="shopping_mall">Shopping Mall</option>
+	</select> 
+
+	<div id="map_canvas"></div>
+
+	<div data-bb-type="action-bar"  data-bb-back-caption="Home">
+    	<div onclick="initGooglePlaces(document.getElementById('poi').value);"  data-bb-type="action" data-bb-style="button" data-bb-img="images/places.png">Results!</div>
+	</div>
+</div>
+
+<!--<script>
+
+function startGeolocation() {
+  var options;
+
+  navigator.geolocation.getCurrentPosition(geoSuccess, geoFail, options);
+}
+
+// geolocation success callback
+function geoSuccess(position) {
+  var gpsPosition = position;
+  var coordinates = gpsPosition.coords;
+  myLat = coordinates.latitude;
+  myLong = coordinates.longitude;
+    
+  
+}
+
+// geolocation failure callback
+function geoFail() {
+  alert('Error getting your position. Using defaults instead');
+
+  // set default position upon failure
+  myLat = 45.348477;
+  myLong = -75.754874;
+  
+}
+
+function initGoogleMaps() {
+
+
+  myLocation = new google.maps.LatLng(myLat, myLong);
+
+  
+
+  var mapOptions = {
+    zoom: 14,
+    center: myLocation,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    zoomControl: false,
+    mapTypeControl: false,
+    streetViewControl: false
+
+  };
+
+  
+  googleMap = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+
+  var home = new google.maps.Marker({
+    map: googleMap,
+    position: myLocation
+  });
+
+}
+
+// search for nearby places
+function initGooglePlaces( value ) {
+
+  var request = {
+    location: myLocation,
+    radius: 2000,
+    types: [value]
+  };
+
+  var service = new google.maps.places.PlacesService(googleMap);
+  service.search(request, function(results) {
+    
+    for(var i = 0; i < results.length; i++) {
+      var marker = new google.maps.Marker({
+        map: googleMap,
+        position: results[i].geometry.location
+        
+      });
+    }  
+  });
+  return;
+}
+
+
+
+
+
+
+
+
+</script>
+-->

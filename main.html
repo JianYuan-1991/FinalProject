@@ -1,0 +1,433 @@
+
+
+
+<div data-bb-type="screen" data-bb-effect="slide-left">
+	
+
+	
+	
+	<div data-bb-type="title" data-bb-caption="ADD Contacts" id="bar"  ></div>
+	
+    <div data-bb-type="action-bar">
+	
+    	<div data-bb-type="action" data-bb-style="tab" data-bb-img="actionBar/cog_dark_theme.png" onclick="showTab('list');">Contact List</div>
+		
+		<div data-bb-type="action" data-bb-style="tab" data-bb-selected="true" data-bb-img="actionBar/cog_dark_theme.png" onclick="showTab('add');">Add Contact</div>
+		
+
+</div>
+
+
+<div data-role="page" id="list">
+
+	
+    <div data-bb-type="image-list" id="contactlist">
+    </div>
+</div>
+
+<div data-role="page" id="add" hidden="" >
+   
+	
+     <div data-bb-type="lable-control-horizontal-row">
+     <div data-bb-type="lable" >First Name:</div>
+     <input type="text" name="FirstName" placeholder="FirstName" id="fn"/>
+     </div>
+     
+     <div data-bb-type="lable-control-horizontal-row">
+     <div data-bb-type="lable" >Last Name:</div>
+     <input type="text" name="LastName"  placeholder="LastName" id="ln"/>
+     </div>
+     
+     <div data-bb-type="lable-control-horizontal-row">
+     <div data-bb-type="lable" >WorkPhone:</div>
+     <input type="text" name="WorkPhone" placeholder="WorkPhone" id="wp"/>
+     </div>
+     
+     <div data-bb-type="lable-control-horizontal-row">
+     <div data-bb-type="lable" >MobilePhone:</div>
+     <input type="text" name="MobilePhone" placeholder="MobilePhone" id="mp"/>
+     </div>
+     
+     <div data-bb-type="lable-control-horizontal-row">
+     <div data-bb-type="lable" >WorkEmail:</div>
+     <input type="text" name="WorkEmail" placeholder="WorkEmail" id="we"/>
+     </div>
+     
+     <div data-bb-type="lable-control-horizontal-row">
+     <div data-bb-type="lable" >HomeEmail:</div>
+     <input type="text" name="HomeEmail" placeholder="HomeEmail" id="he"/>
+     </div>
+     
+     <div data-bb-type="lable-control-horizontal-row">
+     <div data-bb-type="lable" >Description:</div>
+     <input type="text" name="des" placeholder="Description" id="des"/>
+     </div>
+     
+     <div data-bb-type="button" onclick="Save();">Save</div>
+     
+    
+
+    <ul data-role="listview" id="ulSoccasions">
+    
+    </ul>
+</div>
+
+
+
+
+
+<script>
+var ContactId;
+var currentId;
+var currentImg;
+function showTab(id) {
+	if (id == 'add') {
+		document.getElementById("add").style.display = 'inline';
+		document.getElementById("list").style.display = 'none';
+		document.getElementById("bar").setCaption("Add Contact");
+		
+		
+	} else if (id == 'list') {
+		document.getElementById('list').style.display = 'inline';
+		document.getElementById('add').style.display = 'none';
+		document.getElementById("bar").setCaption("Contact List");
+		
+	}  
+}
+ 
+ /*
+ window.onload=init;
+ 
+ function init(){
+	document.addEventListener("webworksready", StartApp ); 
+	alert("init");
+ }*/
+
+ var idea="";
+ 
+ function StartApp(){
+ 	dbNamespace = {};
+ 	dbNamespace.db = window.openDatabase('ContactsDB', '1.0', 'Offline Fruit Information', 5*1024*1024);
+	createDB();
+ 	alert("start app");
+	
+	
+	
+ }
+ 
+ 
+ 
+ 
+function createDB() {
+    var db = dbNamespace.db;
+    db.transaction(function(tx) {
+		//tx.executeSql('DROP TABLE IF EXISTS Contacts');
+        tx.executeSql("CREATE TABLE IF NOT EXISTS Contacts (id INTEGER PRIMARY KEY, des TEXT, img TEXT)", 
+        [], 
+        function(trans) {
+			
+			
+			
+           // handle  the success
+		    
+            alert("Database created!");
+			
+			
+        }, 
+        function(trans, error) {
+            // handle the error
+            alert("Database creation error: " + error);
+        }
+    )});
+}
+
+
+	
+
+function onSaveSuccess(contact) {
+ console.log("Contact with id=" + contact.id + " is saved!");
+ //alert(contact.id);
+ ContactId = contact.id;
+ 
+ 
+	
+    var db = dbNamespace.db;
+	var des=document.getElementsByName("des")[0].value;
+	//alert("bbbbb"+  ContactId);
+    db.transaction(function(tx) {
+        tx.executeSql("INSERT INTO Contacts (id,des) VALUES(?,?)",
+            [ContactId,des],
+            function(trans, result) {
+                // handle the success
+				//alert("inserted" + ContactId);
+				ContactsAdded(des);
+				
+                
+            }, 
+            function(trans, error) {
+                 // handle the error
+                 alert(error);
+            }
+     )});
+ 
+ 
+ 
+}
+function onSaveError(error) {
+ console.log("Error saving contact: " + error.code);
+}
+
+function Save() {
+ var contacts = blackberry.pim.contacts,
+ ContactField = contacts.ContactField,
+ name = {},
+ mobilePhone = { type: ContactField.HOME, value: document.getElementById("mp").value },
+ workPhone = { type: ContactField.WORK, value: document.getElementById("wp").value },
+ workEmail = { type: ContactField.WORK, value: document.getElementById("we").value },
+ homeEmail = { type: ContactField.HOME, value: document.getElementById("he").value },
+ 
+ 
+ 
+ contact;
+ name.familyName = document.getElementById("ln").value;
+ name.givenName = document.getElementById("fn").value;
+ contact = contacts.create({
+ "displayName":document.getElementById("ln").value + " " + document.getElementById("fn").value,
+ "name": name,
+ "phoneNumbers": [workPhone,mobilePhone],
+ "emails": [workEmail, homeEmail]
+ });
+ contact.save(onSaveSuccess, onSaveError);
+	
+	
+	
+	
+	
+	
+	
+}
+
+
+function ContactsAdded(ct){
+	var bbcontacts
+	Fields = ["id", "name", "emails","phonenumbers"];
+	FindSucess = function(contacts){
+		bbcontacts=contacts;
+		
+	 var db = dbNamespace.db;
+	 db.transaction(function(tx) {
+		 tx.executeSql('SELECT * FROM Contacts', [], 
+		 
+		 	function(trans, result) {
+            var rowOutput ="";
+			var items = [], 
+		    item;
+			var index=-1000;
+	
+            for(var i=0; i < result.rows.length; i++) {
+				
+				var found = false;
+				var bbcid = result.rows.item(i).id;
+				for(var j=0; j<bbcontacts.length;j++){
+			
+				
+				 
+					if ( parseInt( result.rows.item(i).id ) ==  parseInt( bbcontacts[j].id )  )
+					{	
+						found= true;
+						index=j;
+						break;
+						
+					}
+						
+				}
+					
+					
+						if (found){
+							
+							item = document.createElement('div');
+							item.setAttribute('data-bb-type','item');
+							item.setAttribute('data-bb-title', bbcontacts[index].name.givenName );
+							item.setAttribute('data-img',result.rows.item(i).img);
+							
+							item.setAttribute('data-id', result.rows.item(i).id );
+							item.setAttribute('data-desc', result.rows.item(i).des );
+							//alert("3");
+							
+							item.onclick = function() {
+								alert('clicked');
+							var chosen = document.getElementById("contactlist").selected;
+							//currentId = chosen.getAttribute('data-id');
+						    //currentImg = chosen.getAttribute('data-img');
+
+							
+							getActiveContact(chosen.getAttribute('data-id'), chosen.getAttribute('data-desc'));
+							
+							
+							
+							
+							
+							
+							
+							
+							//bb.pushScreen("detail.html", "detail");
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							};
+							
+							
+							
+							
+							
+							items.push(item);
+							
+							
+						
+						
+						
+						
+						
+						
+						}
+						//else{
+						//alert(result.rows.item(i).id);
+							//Delete(result.rows.item(i).id);
+						
+						//}
+				   
+					
+					
+					
+					
+					
+					
+				
+			}
+			document.getElementById("contactlist").refresh(items);
+				
+				
+            }, 
+            function(trans, error) { 
+			
+			alert ("in error" + error); 
+			}
+                 // handle the error
+				 
+                 
+	 );
+	 });
+		
+		
+		
+		
+		}
+	FindError = function(error){
+		
+		
+		}
+		
+	findOptions = new blackberry.pim.contacts.ContactFindOptions();
+	
+	blackberry.pim.contacts.find(Fields, findOptions,FindSucess,FindError);
+	
+	
+	
+}
+
+function Delete(id){
+	var db = dbNamespace.db;
+
+	
+	 db.transaction(function(tx) {
+        tx.executeSql("DELETE FROM Contacts WHERE id = " + id,
+            [ContactId,des],
+            function(trans, result) {
+                // handle the success
+				alert("DElete" + ContactId);
+				
+				
+                
+            }, 
+            function(trans, error) {
+                 // handle the error
+                 alert(error);
+            }
+     )});
+	
+	
+	}
+
+   function invokeCamera(){
+		var model = blackberry.invoke.card.CAMERA_MODE_PHOTO;
+	blackberry.invoke.card.invokeCamera(model,
+	
+	function(image){
+		alert()
+		document.getElementById("img").src = "file://" + img;
+		updateimg(img);
+		},
+	function(cuz){
+		
+		alert(cuz);
+		
+		},
+	function(msg){
+		
+		alert(msg);
+		
+		}
+   );
+     
+   }
+   
+ function updateimg(img){
+	 
+	 var db = dbNamespace.db;
+	db.transaction(	
+			function(tx) {
+				tx.executeSql(
+					"UPDATE Contacts SET img = ? WHERE id = ?",[img,currentId]
+					,
+					function(trans, result) {
+						// handle the success
+						alert("Update img: " + currentId);
+					}, 
+					function(trans, error) {
+						 // handle the error
+						 alert("Error updating " + currentId + ": " + error);
+					})
+			});
+
+	 
+	 
+	 
+	 }
+
+ function getActiveContact(id,desc){
+	 
+	 var contacts = blackberry.pim.contacts;
+	 var contact = contacts.getContact(id);
+	
+	 
+	 alert("1111"+ contact.name.givenName);
+	  //bb.pushScreen("detail.html", "detail");
+	bb.pushScreen("detail.html", "detail", {'fname':contact.name.givenName,  'lname':contact.name.familyName,'workphone':contact.phoneNumbers[0].value,
+	 'HomePhone':contact.phoneNumbers[1].value,
+	 'HomeEmail':contact.emails[0].value,
+	 'WorkEmail':contact.emails[1].value,
+	 'desc':desc
+	 
+	 });
+	 
+	 
+	 }
+
+StartApp();
+</script>

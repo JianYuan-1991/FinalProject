@@ -1,0 +1,87 @@
+
+<div data-bb-type="screen" data-bb-effect="slide-left">
+	<div id="backTitleBar" data-bb-type="title" data-bb-caption="Campus Service" data-bb-back-caption="Back" />
+    <div data-role="page" id="CampusService">
+    	<div data-bb-type="image-list" id="List">
+        </div>
+    </div>
+
+</div>
+<style>
+
+#List{
+	margin:100px;
+	
+	
+	}
+
+
+
+</style>
+
+
+<script>
+
+	var json = null;
+
+	function getJson()
+	{
+		
+		
+		if (json==null){
+			
+			$.getJSON("Menu.json",SuccessJSON).fail(failJSON);
+			
+					
+					   }
+		
+		
+		
+	}
+	
+	function SuccessJSON(xhrData, status, jqXHR){
+	json = xhrData;
+	
+	var items=[];
+	for(var i=0; i<json.campusservices.length; i++){
+	//alert( json.services[i].service);
+					var item = document.createElement('div');
+					item.setAttribute('data-bb-type','item');
+					
+					
+					item.setAttribute('data-bb-title', json.campusservices[i].campusservice);
+					
+					item.onclick; 
+						
+						
+						
+						
+						
+
+						
+					
+				
+					
+				
+					items.push(item);
+}
+			document.getElementById('List').refresh(items);
+         
+        
+}
+
+
+
+
+function failJSON(jqXHR, textStatus, errorThrown){
+	alert(errorThrown);
+}
+
+
+
+
+
+
+
+
+</script>

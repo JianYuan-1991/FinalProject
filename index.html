@@ -1,0 +1,81 @@
+
+<html>
+<head>
+
+
+<link  rel="stylesheet" type="text/css" href="bbui.css"></link>
+		<link  rel="stylesheet" type="text/css" href="style.css"></link>
+          <script type="text/javascript" src="bbui.js"></script>
+          <script type="text/javascript" src="local:///chrome/webworks.js"></script>
+          <script src="https://maps.googleapis.com/maps/api/js?sensor=true&libraries=places"></script>
+          <script type="text/javascript" src="map.js"></script>
+          <script src='jquery-1.9.1.min.js'></script>
+          
+          
+         
+          <script type="text/javascript">
+		  
+		  
+		  
+
+          window.addEventListener('load',function() {
+              document.addEventListener('webworksready', function(e) {
+                 bb.init({
+                        
+
+                        onscreenready: function(element, id, params) {
+						if(id == 'campus'){
+							alert("kakaakak")
+							  getJson();
+							}	
+							
+						if(id == 'MyTimetable'){
+							ChooseTimetable();
+							
+							}
+						if(id == 'main'){
+							ContactsAdded();
+							
+							
+							}
+						
+							
+                       if (id == 'detail') {
+						
+						element.getElementById("name").innerHTML = params.fname+""+params.lname;
+						element.getElementById("mobilephone").innerHTML = "MobilePhone: <br>"+params.HomePhone;   
+						element.getElementById("homephone").innerHTML =  "WorkPhone: <br>"+params.workphone;   
+						element.getElementById("personemail").innerHTML =  "PersonalEmail: <br>"+params.HomeEmail;  
+						element.getElementById("workemail").innerHTML =    "WorkEmail: <br>"+params.WorkEmail;   
+   						element.getElementById("desc").innerHTML = params.desc;
+						element.getElementById("img").src = 'file://' + currentImg; 
+						                     }
+                        },
+                        ondomready: function(element, id) {
+                                      if (id === 'google') {
+                                        initGoogleMaps();
+
+                                      }
+                                    }
+                        });
+					bb.pushScreen('main1.html','main1');
+							  
+				}, false);
+         	    }, false);
+
+			
+
+
+			  
+			
+	 </script>
+          
+</head>
+<body>
+
+
+
+
+
+</body>
+</html>

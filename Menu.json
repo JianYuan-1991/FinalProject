@@ -1,0 +1,131 @@
+﻿{
+    "campusservices": [
+        {
+            "campusservice": "Food & Beverage",
+            "detail": [
+                {
+                    "dservice": "Marketplace Food Court",
+                    "location": "Building D"
+                },
+                {
+                    "dservice": "35th Street market Cafe",
+                    "location": "uilding E"
+                },
+                {
+                    "dservice": "The Observatory",
+                    "location": "Building D"
+                },
+                {
+                    "dservice": "First Cup Deli",
+                    "location": "Building A"
+                }
+            ]
+        },
+        {
+            "campusservice": "Technology Store",
+            "detail": [
+                {
+                    "dservice": "The First Technology",
+                    "location": "Building D"
+                },
+                {
+                    "dservice": "Electonics",
+                    "location": "Building E"
+                },
+                {
+                    "dservice": "Apple Store",
+                    "location": "Building D"
+                }
+            ]
+        },
+        {
+            "campusservice": "Peer Tutoring",
+            "detail": [
+                {
+                    "dservice": "Commons Building",
+                    "location": "Building D"
+                },
+                {
+                    "dservice": "Algonquin Tutor' Bytes",
+                    "location": "Building D"
+                },
+                {
+                    "dservice": "Canada Tutoring",
+                    "location": "Building A"
+                }
+            ]
+        },
+        {
+            "campusservice": "Spiritual Centre",
+            "detail": [
+                {
+                    "dservice": "All Religion Centre",
+                    "location": "Building D"
+                },
+                {
+                    "dservice": "Spiritual Centre",
+                    "location": "Building E"
+                },
+                {
+                    "dservice": "The Fix Eatery' Bytes",
+                    "location": "Building D"
+                },
+                {
+                    "dservice": "First Cup Deli",
+                    "location": "Building A"
+                }
+            ]
+        },
+        {
+            "campusservice": "Sports Therapy Clinic",
+            "detail": [
+                {
+                    "dservice": "Boxing",
+                    "location": "Building D"
+                },
+                {
+                    "dservice": "Gym",
+                    "location": "Building A"
+                },
+                {
+                    "dservice": "Massage Therapy' Bytes",
+                    "location": "Building D"
+                }
+            ]
+        },
+        {
+            "campusservice": "Mail and PrintServices",
+            "detail": [
+                {
+                    "dservice": "First Print",
+                    "location": "Building D"
+                },
+                {
+                    "dservice": "UPS",
+                    "location": "Building D"
+                },
+                {
+                    "dservice": "Fedex",
+                    "location": "Building A"
+                }
+            ]
+        },
+        {
+            "campusservice": "Health Services",
+            "detail": [
+                {
+                    "dservice": "ALgonquin Dental Clinic",
+                    "location": "Building H"
+                },
+                {
+                    "dservice": "Health",
+                    "location": "Building C"
+                },
+                {
+                    "dservice": "Dental Insurance",
+                    "location": "Building C"
+                }
+            ]
+        }
+    ]
+}

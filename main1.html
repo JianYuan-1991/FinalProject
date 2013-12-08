@@ -1,0 +1,91 @@
+<div data-bb-type="screen" data-bb-effect="slide-left">
+
+	<div id="TitleBar" data-bb-type="title" data-bb-caption="My Algonquin Life"></div>
+
+		<div data-bb-type="grid-layout">
+        
+        
+          		<div data-bb-type="row">
+              		<div data-bb-type="item" data-bb-img="1.png" data-bb-title="My Contacts" onclick="LoadMyContacts();"></div>
+                    <div data-bb-type="item" data-bb-img="1.png" data-bb-title="Campus Services" onclick="CS();"></div>
+
+				</div>
+                <div data-bb-type="row">
+              		<div data-bb-type="item" data-bb-img="1.png" data-bb-title="Going Places" onclick="Transpo();"></div>
+                    <div data-bb-type="item" data-bb-img="1.png" data-bb-title="Things I've Seen" ></div>
+                </div>
+                <div data-bb-type="row">
+              		<div data-bb-type="item" data-bb-img="1.png" data-bb-title="Where am I?" ></div>
+                    <div data-bb-type="item" data-bb-img="1.png" data-bb-title="Favorite Place" onclick="FP();"></div>
+                </div>
+                <div data-bb-type="row">
+              		<div data-bb-type="item" data-bb-img="1.png" data-bb-title="My Timetable" onclick="MT();" ></div>
+                    <div data-bb-type="item" data-bb-img="1.png" data-bb-title="Things To Do" ></div>
+                </div>
+		</div>
+
+	
+
+</div>
+
+
+<script>
+
+
+function LoadMyContacts(){
+	
+	bb.pushScreen("main.html","main");
+	
+	
+	}
+
+function Transpo(){
+	
+	alert("OKOKOKOKO");
+blackberry.invoke.invoke({
+			
+			uri: "http://www.octranspo.com/mobi/"
+			}, onSuccess, onError);	
+
+	
+	
+	}
+	
+function onSuccess(response) {
+			console.log("<p>Invocation query successful: " + response + "</p>");
+		}
+		
+function onError(error) {
+			console.log("<p>Invocation query error: " + error + "</p>");
+		}
+	
+function MT(){
+	
+	bb.pushScreen("MyTimetable.html","MyTimetable");	
+
+	
+	
+	}
+	
+function onSuccess(response) {
+			console.log("<p>Invocation query successful: " + response + "</p>");
+		}
+		
+function onError(error) {
+			console.log("<p>Invocation query error: " + error + "</p>");
+		}
+
+
+function CS(){
+	alert("clicked");
+	bb.pushScreen("Campus.html","campus");	
+
+	
+	
+	}
+		
+
+
+</script>
+
+
